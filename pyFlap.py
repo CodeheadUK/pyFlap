@@ -42,6 +42,7 @@ def main():
 
     cloudImg = pygame.image.load('assets/clouds.png')
     pipeImg = pygame.image.load('assets/pipe.png')
+    pipe2Img = pygame.transform.flip(pipeImg, False, True)
     buildingImg = pygame.image.load('assets/buildings.png')
     grassImg = pygame.image.load('assets/grass.png')
 
@@ -57,7 +58,6 @@ def main():
                 return
             elif event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.KEYDOWN:
                 birdPosY = 100
-
 
         # Clear screen
         screen.blit(background, (0, 0))
@@ -90,6 +90,8 @@ def main():
         # Draw pipes
         for pipe in pipeLocation:
                 screen.blit(pipeImg, (pipe[0], pipe[2]))
+                screen.blit(pipe2Img, (pipe[0], pipe[2]-400))
+
                 pipe[0] -= 3
                 if(pipe[0] < -400):
                     pipe[0] = 800
