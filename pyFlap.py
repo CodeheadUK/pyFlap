@@ -11,10 +11,11 @@ grassPos = []
 
 birdPosX = 100
 birdPosY = 100
+birdRot = 0
+pipeGap = 0
 
 def main():
-    global birdPosX
-    global birdPosY
+    global birdPosX, birdPosY, birdRot, pipeGap
 
     pygame.init()
     gameInit()
@@ -41,8 +42,10 @@ def main():
     birdImg = pygame.transform.scale(birdImg, (128, 128))
 
     cloudImg = pygame.image.load('assets/clouds.png')
-    pipeImg = pygame.image.load('assets/pipe.png')
-    pipe2Img = pygame.transform.flip(pipeImg, False, True)
+    pipeTmp = pygame.image.load('assets/pipe.png')
+    pipeImg = pygame.transform.scale(pipeTmp, (128, 512))
+    pipeCapImg = pygame.image.load('assets/pipe_cap.png')
+    pipeCapImg2 = pygame.transform.flip(pipeCapImg, False, True)
     buildingImg = pygame.image.load('assets/buildings.png')
     grassImg = pygame.image.load('assets/grass.png')
 
@@ -84,19 +87,28 @@ def main():
                 grass[0] = 1024
 
         # Draw bird
-        screen.blit(birdImg, (birdPosX, birdPosY))
+        orig_rect = birdImg.get_rect()
+        birdRotImg = pygame.transform.rotate(birdImg, birdRot)
+        rot_rect = orig_rect.copy()
+        rot_rect.center = birdRotImg.get_rect().center
+        birdRotImg = birdRotImg.subsurface(rot_rect).copy()
+        screen.blit(birdRotImg, (birdPosX, birdPosY))
         birdPosY += 1
+        birdRot += 5
 
         # Draw pipes
         for pipe in pipeLocation:
+                # Pipe Stem
                 screen.blit(pipeImg, (pipe[0], pipe[2]))
-                screen.blit(pipe2Img, (pipe[0], pipe[2]-400))
+                screen.blit(pipeImg, (pipe[0], pipe[2]-pipeGap-550))
+
+                # Pipe Caps
+                screen.blit(pipeCapImg, (pipe[0], pipe[2]-10))#
+                screen.blit(pipeCapImg2, (pipe[0], pipe[2]-pipeGap-68))
 
                 pipe[0] -= 3
                 if(pipe[0] < -400):
                     pipe[0] = 800
-
-
 
         # Update screen
         pygame.display.flip()
@@ -104,6 +116,8 @@ def main():
 
 
 def gameInit():
+    global birdPosX, birdPosY, birdRot, pipeGap
+
     # Set up pipe locations
     pipeLocation.append([800,  False, 400])
     pipeLocation.append([1200, False, 450])
@@ -118,7 +132,7 @@ def gameInit():
     birdPosX = 100
     birdPosY = 100
 
-
+    pipeGap = 150
 
 
 
